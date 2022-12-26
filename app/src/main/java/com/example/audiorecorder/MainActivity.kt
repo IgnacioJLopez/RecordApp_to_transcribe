@@ -27,6 +27,8 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+import android.net.Uri
+
 
 /**
  * This version saves the recorded audio but does not allow listening or sharing
@@ -103,6 +105,7 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
             // TODO
             Toast.makeText(this,"Record Saved", Toast.LENGTH_SHORT).show()
             save()
+            //shareAudioViaWhatsApp()
             // Share
         }
 
@@ -145,21 +148,36 @@ class MainActivity : AppCompatActivity(), Timer.OnTimerTickListener {
 
         /*
         val fileLocation = File(this.filesDir, filePath)
-        val path = FileProvider.getUriForFile(this, authorities, fileLocation)
-
-        ShareCompat.IntentBuilder(this).apply {
-            setChooserTitle("share...")
-            setText("Share text")
-            setStream(path)
-            setType("audio/mp3")
-        }.startChooser()
+        val fileUri = FileProvider.getUriForFile(this, authorities, fileLocation)
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "audio/*"
+        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
+        shareIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        startActivity(Intent.createChooser(shareIntent, "Share audio"))
+         */
 
          */
+
 
     }
 
     fun share(){
         //Share the recorded audio
+    }
+
+    fun shareAudioViaWhatsApp() {
+        val file = File(getFilePath())
+        val fileUri = FileProvider.getUriForFile(this, authorities, file)
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "audio/*"
+        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri)
+        shareIntent.setPackage("com.whatsapp")
+        startActivity(Intent.createChooser(shareIntent, "Share audio"))
+    }
+
+    fun getFilePath(): String {
+        val file = File(getExternalFilesDir(null), "recording.3gp")
+        return file.absolutePath
     }
 
     override fun onRequestPermissionsResult(

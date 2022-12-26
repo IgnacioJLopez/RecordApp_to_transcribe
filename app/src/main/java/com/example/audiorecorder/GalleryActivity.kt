@@ -4,13 +4,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore.Audio
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.audiorecorder.databinding.ActivityGalleryBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity(), OnItemClickListener {
 
     private lateinit var binding: ActivityGalleryBinding
 
@@ -31,7 +32,7 @@ class GalleryActivity : AppCompatActivity() {
             "audioRecords"
         ).build()
 
-        mAdapter = Adapter(records)
+        mAdapter = Adapter(records, this)
 
         binding.recyclerview.apply {
             adapter = mAdapter
@@ -50,6 +51,14 @@ class GalleryActivity : AppCompatActivity() {
 
             mAdapter.notifyDataSetChanged()
         }
+    }
+
+    override fun onItemClickListener(position: Int) {
+        Toast.makeText(this, "Simple Click", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onItemLongClickListener(position: Int) {
+        Toast.makeText(this, "Long Click", Toast.LENGTH_SHORT).show()
     }
 
 }
